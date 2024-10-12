@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BabyFoot By CCI - Mon compte{% endblock %}
+
+{% block body %}
+
+<div class="hero overlay" style="background-image: url('images/account.jpg');">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-5 ml-auto">
+            <h1 class="text-white">Mon Compte</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section bg-dark">
+      <div class="container">
+        <div class="row">
+            <div class="tab" role="tabpanel" style="width: 100%;">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Mes informations</a></li>
+                    <li role="presentation"><a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Matchs en cours</a></li>
+                    <li role="presentation"><a href="#Section3" aria-controls="messages" role="tab" data-toggle="tab">Historique de mes matchs</a></li>
+                </ul>
+                <!-- Tab panes -->
+                {% if player is not empty %}
+                <div class="tab-content tabs">
+                    <div role="tabpanel" class="tab-pane fade in active show" id="Section1">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div>
+                            <label for="name">Mon nom</label>
+                            <input type="text" id="name" name="name" placeholder="{{player.lastName}}" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div>
+                            <label for="firstName">Mon prénom</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="{{player.firstName}}" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div>
+                            <label for="nickName">Pseudo</label>
+                            <input type="text" id="nickName" name="nickName" placeholder="{{player.nickName}}" disabled>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div>
+                            <label for="mail">Mon adresse mail</label>
+                            <input type="mail" id="mail" name="mail" placeholder="{{player.email}}" disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section2">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">ÉQUIPE BLEUE</th>
+                            <th scope="col">ÉQUIPE ROUGE</th>
+                            <th scope="col">DATE</th>
+                            <th scope="col">SCORE</th>
+                            <th scope="col">ACTION</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        	{% if InProgressGames is not empty %}
+                            {% for game in InProgressGames %}
+                                <tr>
+                                    <td>{{ game.teamBlue.name }}</td>
+                                    <td>{{ game.teamRed.name }}</td>
+                                    <td>{{ game.dateGame|date('Y-m-d') }}</td>
+                                    <td>({{ game.teamBlueScore }}) - ({{ game.teamRedScore }})</td>
+                                    <td>
+                                        <a href="{{path('account_game_edit', {'id': game.id}) }}" class="btn btn-primary py-1 px-2 mr-3" style="margin-left: 1rem;">Finaliser le match</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                          {% else %}
+                            <tr>
+                              <td colspan="5">Vous avez aucun match en cours ...</td>
+                            </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>                    
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section3">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">ÉQUIPE BLEUE</th>
+                            <th scope="col">ÉQUIPE ROUGE</th>
+                            <th scope="col">DATE</th>
+                            <th scope="col">SCORE</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% if historyGames is not empty %}
+                            {% for match in historyGames %}
+                              <tr>
+                                  <td>{{ match.teamBlue.name }}</td>
+                                  <td>{{ match.teamRed.name }}</td>
+                                  <td>{{ match.dateGame|date('d/m/Y') }}</td>
+                                  <td>({{ match.teamBlueScore }}) - ({{ match.teamRedScore }})</td>
+                              </tr>
+                            {% endfor %}
+                          {% else %}
+                            <tr>
+                              <td colspan="5">Vous avez joué aucun match ...</td>
+                            </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>  
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="tab" role="tabpanel" style="width: 100%;">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#Section4" aria-controls="home" role="tab" data-toggle="tab">Statistiques</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content tabs">
+                    <div role="tabpanel" class="tab-pane fade in active show" id="Section4">
+                      <div class="row">
+                      {% if statPlayer is not empty %}
+                        <div class="col-md-4">
+                          <div class="stat">
+                            <p class="value">{{ statPlayer.nbVictoire }}</p>
+                            <p class="label">Victoires</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="stat">
+                            <p class="value">{{ statPlayer.nbDefaite }}</p>
+                            <p class="label">Défaites</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="stat">
+                            <p class="value">{{ statPlayer.ratio }}</p>
+                            <p class="label">Ratio v/d</p>
+                          </div>
+                        </div>
+                        {% else %}
+                          <div class="col-md-4">
+                            <div class="stat">
+                              <p class="value">0</p>
+                              <p class="label">Victoires</p>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="stat">
+                              <p class="value">0</p>
+                              <p class="label">Défaites</p>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="stat">
+                              <p class="value">0</p>
+                              <p class="label">Ratio v/d</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div> <!-- .site-section -->
+
+{% endblock %}
